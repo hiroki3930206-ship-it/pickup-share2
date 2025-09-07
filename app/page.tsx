@@ -14,6 +14,8 @@ type DaySlots = {
   morningNote?: string;
   eveningNote?: string;
 };
+type NoteKey = 'morningNote' | 'eveningNote';
+
 type Schedule = Record<DayKey, DaySlots>;
 
 const MEMBERS: Record<CellValue, { label: string; color: string }> = {
@@ -189,9 +191,11 @@ export default function Page() {
     history.set({ ...schedule, [day]: { ...schedule[day], [slot]: v } });
   };
   const setNote = (day: DayKey, slot: 'morning' | 'evening', note: string) => {
-    const key = slot === 'morning' ? 'morningNote' : 'eveningNote';
-    history.set({ ...schedule, [day]: { ...schedule[day], [key]: note } as DaySlots });
-  };
+  const key: NoteKey = slot === 'morning' ? 'morningNote' : 'eveningNote';
+  const nextDay: DaySlots = { ...schedule[day], [key]: note };
+  history.set({ ...schedule, [day]: nextDay });
+};
+
 
   const weekDates = useMemo(
     () => (weekStart ? getWeekDays(mondayFromYMD(weekStart)) : []),
@@ -365,8 +369,9 @@ export default function Page() {
                     <td className="bg-gray-100 p-3 text-sm">{slot === 'morning' ? '朝(送り)' : '夕(迎え)'}</td>
                     {DAYS.map((d) => {
                       const v = schedule[d][slot];
-                      const noteKey = slot === 'morning' ? 'morningNote' : 'eveningNote';
-                      const noteVal = (schedule[d] as any)[noteKey] ?? '';
+                     const key: NoteKey = slot === 'morning' ? 'morningNote' : 'eveningNote';
+const noteVal = schedule[d][key] ?? '';
+
                       return (
                         <td key={`${d}-${slot}`} className="p-2">
                           <div>{cellSelect(d, slot, v)}</div>
@@ -421,3 +426,4 @@ export default function Page() {
     </div>
   );
 }
+

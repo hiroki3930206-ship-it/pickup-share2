@@ -99,7 +99,8 @@ export default function Page() {
   const schedule = history.value;
 
   // Firestore購読の解除用
-  const unsubscribeRef = useRef<() => void>();
+const unsubscribeRef = useRef<(() => void) | null>(null);
+
 
   // Firestoreのスナップショット反映中フラグ（書き込みループ防止）
   const applyingRemoteRef = useRef(false);
@@ -426,4 +427,5 @@ const noteVal = schedule[d][key] ?? '';
     </div>
   );
 }
+
 

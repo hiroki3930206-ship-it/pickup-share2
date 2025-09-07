@@ -124,7 +124,7 @@ const unsubscribeRef = useRef<(() => void) | null>(null);
     // 既存の購読を解除
     if (unsubscribeRef.current) {
       unsubscribeRef.current();
-      unsubscribeRef.current = undefined;
+      unsubscribeRef.current = null;
     }
 
     const ref = doc(db, 'schedules', docIdOf(weekStart));
@@ -154,7 +154,7 @@ const unsubscribeRef = useRef<(() => void) | null>(null);
     // クリーンアップ
     return () => {
       unsub();
-      unsubscribeRef.current = undefined;
+      unsubscribeRef.current = null;
     };
   }, [mounted, weekStart]); // 週が変わるたび購読し直す
 
@@ -427,5 +427,6 @@ const noteVal = schedule[d][key] ?? '';
     </div>
   );
 }
+
 
 
